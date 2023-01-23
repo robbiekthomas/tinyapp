@@ -45,7 +45,9 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
+  
   console.log(req.body); // Log the POST request body to the console
+  console.log(generateRandomString());
   res.send("Ok"); // Respond with 'Ok' (we will replace this)
 });
 
@@ -58,4 +60,12 @@ app.get("/urls/:id", (req, res) => {
 });
 
 
-// function generateRandomString() {}
+function generateRandomString() {
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz'
+  const random = [];
+  for (let i = 0; i < 6; i++) {
+    let randomCharacter = alphabet[Math.floor(Math.random() * alphabet.length)];
+    random.push(randomCharacter);
+  }
+  return random.join('');
+}
