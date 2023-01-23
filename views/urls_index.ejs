@@ -18,21 +18,25 @@
   </head>
   <body>
     <%- include('partials/_header') %>
-    <main style="margin: 1em;">
+    <main style="margin: 1em">
       <h3>My URLs</h3>
       <table class="table">
         <thead>
           <tr>
             <th scope="col">Short URL ID</th>
             <th scope="col">Long URL</th>
+            <th scope="col">Delete</th>
           </tr>
         </thead>
         <tbody>
           <% for (let id in urls) { %>
-            <tr>
-              <td><%= id %></td>
-              <td><%= urls[id] %></td>
-            </tr>
+          <tr>
+            <td><%= id %></td>
+            <td><%= urls[id] %></td>
+            <form method="POST" action=<%= `/urls/${id}/delete` %>>
+              <td><button class="btn btn-outline-danger">Delete</button></td>
+            </form>
+          </tr>
           <% } %>
         </tbody>
       </table>
