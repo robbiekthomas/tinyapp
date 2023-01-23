@@ -69,6 +69,12 @@ app.post("/urls/:id/delete", (req, res) => {
   res.redirect("/urls");
 });
 
+app.post("/urls/:id", (req, res) => {
+  urlDatabase[req.params.id] = req.body.editURL;
+  res.redirect("/urls");
+});
+
+
 function generateRandomString() {
   const alphabet = "abcdefghijklmnopqrstuvwxyz1234567890";
   const random = [];
