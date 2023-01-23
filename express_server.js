@@ -44,12 +44,6 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
-app.post("/urls", (req, res) => {
-  
-  console.log(req.body); // Log the POST request body to the console
-  console.log(generateRandomString());
-  res.send("Ok"); // Respond with 'Ok' (we will replace this)
-});
 
 app.get("/urls/:id", (req, res) => {
   const templateVars = {
@@ -59,9 +53,20 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+app.post("/urls", (req, res) => {
+  const randomString = generateRandomString();
+  urlDatabase[randomString] = req.body.longURL;
+  console.log(urlDatabase);
+  res.redirect(`/urls/${randomString}`); 
+});
+
+app.get("/u/:id", (req, res) => {
+  const longURL = urlDatabase[req.params.id];
+  res.redirect(longURL);
+});
 
 function generateRandomString() {
-  const alphabet = 'abcdefghijklmnopqrstuvwxyz'
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz1234567890'
   const random = [];
   for (let i = 0; i < 6; i++) {
     let randomCharacter = alphabet[Math.floor(Math.random() * alphabet.length)];
