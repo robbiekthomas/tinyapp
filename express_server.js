@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const cookieParser = require('cookie-parser')
+const cookieParser = require("cookie-parser");
 const PORT = 8080; // default port 8080
 
 app.use(cookieParser());
@@ -48,7 +48,7 @@ app.get("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
   const templateVars = {
     username: req.cookies["username"],
-  }
+  };
   res.render("urls_new", templateVars);
 });
 
@@ -91,6 +91,13 @@ app.post("/login", (req, res) => {
 app.post("/logout", (req, res) => {
   res.clearCookie("username", req.body.username);
   res.redirect("/urls");
+});
+
+app.get("/register", (req, res) => {
+  const templateVars = {
+    username: req.cookies["username"],
+  };
+  res.render("register", templateVars);
 });
 
 function generateRandomString() {
