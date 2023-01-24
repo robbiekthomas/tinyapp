@@ -74,6 +74,13 @@ app.post("/urls/:id", (req, res) => {
   res.redirect("/urls");
 });
 
+app.post("/login", (req,res) => {
+  res.cookie('Username', req.body.username)
+  console.log(req.body.username)
+  res.redirect("/urls");
+})
+
+
 
 function generateRandomString() {
   const alphabet = "abcdefghijklmnopqrstuvwxyz1234567890";
