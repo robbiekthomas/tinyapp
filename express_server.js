@@ -127,13 +127,8 @@ app.post("/urls/:id", (req, res) => {
   res.redirect("/urls");
 });
 
-app.post("/login", (req, res) => {
-  res.cookie("username", req.body.username);
-  res.redirect("/urls");
-});
-
 app.post("/logout", (req, res) => {
-  res.clearCookie("username", req.body.username);
+  res.clearCookie("user_id", req.body.user_id);
   res.redirect("/urls");
 });
 
@@ -163,4 +158,17 @@ app.post("/register", (req, res) => {
   };
   res.cookie("user_id", randomString);
   res.redirect(`/urls/`);
+});
+
+app.get("/login", (req, res) => {
+  const userID = req.cookies["user_id"];
+  const user = users[userID];
+  const templateVars = {
+    user,
+  };
+  res.render("login", templateVars);
+});
+
+app.post("/login", (req, res) => {
+  res.redirect("/login");
 });
