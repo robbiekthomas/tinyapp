@@ -129,7 +129,7 @@ app.post("/urls/:id", (req, res) => {
 
 app.post("/logout", (req, res) => {
   res.clearCookie("user_id", req.body.user_id);
-  res.redirect("/urls");
+  res.redirect("/login");
 });
 
 app.get("/register", (req, res) => {
@@ -170,5 +170,14 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  res.redirect("/login");
+  for (let user in users) {
+    if (users[user].email === req.body.email) {
+      if (users[user].password === req.body.password) {
+        const id = users[user].id;
+        res.cookie("user_id", id);
+        res.redirect("/urls");
+      }
+    }
+  }
+  res.sendStatus(403);
 });
