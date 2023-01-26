@@ -6,8 +6,8 @@ Each user has to create a login and only has access to their own URLs that they 
 ## Final Product
 
 
-!["screenshot description"](#)
-!["screenshot description"](#)
+!["Screenshot of URLs Page"](https://github.com/robbiekthomas/tinyapp/blob/master/docs/urls-page.PNG?raw=true)
+!["Screenshot of Shortened URL Page"](https://github.com/robbiekthomas/tinyapp/blob/master/docs/shortened-url-page.PNG?raw=true)
 
 ## Dependencies
 
