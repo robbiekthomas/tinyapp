@@ -1,6 +1,8 @@
 const express = require("express");
-const app = express();
 const cookieParser = require("cookie-parser");
+const bcrypt = require("bcryptjs");
+
+const app = express();
 const PORT = 8080; // default port 8080
 
 app.use(cookieParser());
@@ -27,12 +29,12 @@ const users = {
   j3ihl4: {
     id: "j3ihl4",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur",
+    password: bcrypt.hashSync("purple-monkey-dinosaur", 10),
   },
   aJ48lW: {
     id: "aJ48lW",
     email: "user2@example.com",
-    password: "asdf",
+    password: bcrypt.hashSync("asdf", 10),
   },
 };
 
@@ -231,7 +233,7 @@ app.post("/register", (req, res) => {
   users[randomString] = {
     id: randomString,
     email: req.body.email,
-    password: req.body.password,
+    password: bcrypt.hashSync(req.body.password, 10),
   };
   res.cookie("user_id", randomString);
   res.redirect(`/urls/`);
@@ -256,7 +258,7 @@ app.post("/login", (req, res) => {
   for (let user in users) {
     if (
       users[user].email === req.body.email &&
-      users[user].password === req.body.password
+      bcrypt.compareSync(req.body.password, users[user].password)
     ) {
       const id = users[user].id;
       res.cookie("user_id", id);
@@ -267,4 +269,3 @@ app.post("/login", (req, res) => {
   res.status(403).send("Username or Password is incorrect");
 });
 ///--- LOGIN ROUTE ENDS HERE ------///
-
