@@ -1,14 +1,17 @@
 const express = require("express");
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcryptjs");
+const { getUserByEmail, generateRandomString } = require("./helpers");
 
 const app = express();
 const PORT = 8080; // default port 8080
 
-app.use(cookieSession({
-  name: 'session',
-  keys: ['test'],
-}));
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["test"],
+  })
+);
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
@@ -41,28 +44,6 @@ const users = {
   },
 };
 
-// ----- Helper Functions -------
-
-function generateRandomString() {
-  const alphabet = "abcdefghijklmnopqrstuvwxyz1234567890";
-  const random = [];
-  for (let i = 0; i < 6; i++) {
-    let randomCharacter = alphabet[Math.floor(Math.random() * alphabet.length)];
-    random.push(randomCharacter);
-  }
-  return random.join("");
-}
-
-function getUserByEmail(userData, userName) {
-  for (let user in userData) {
-    if (userData[user].email === userName) {
-      return false;
-    }
-  }
-  return true;
-}
-
-/// HELPER FUNCTIONS ENDS HERE ------
 //========================================
 
 // -------- App Requests -------
@@ -114,6 +95,7 @@ app.get("/urls/:id", (req, res) => {
       user,
     };
     res.render("shortURLDoesNotExist", templateVars);
+    return;
   }
 
   if (!user) {
@@ -121,12 +103,14 @@ app.get("/urls/:id", (req, res) => {
       user,
     };
     res.render("shortenedURLsForbidden", templateVars);
+    return;
   }
   if (userID !== urlDatabase[req.params.id].userID) {
     const templateVars = {
       user,
     };
     res.render("shortenedURLDoesNotBelong", templateVars);
+    return;
   }
 
   const templateVars = {
@@ -163,6 +147,7 @@ app.get("/u/:id", (req, res) => {
     res.redirect(longURL);
   } else {
     res.status(404).send("That url does not exist");
+    return;
   }
 });
 
@@ -173,12 +158,15 @@ app.post("/urls/:id/delete", (req, res) => {
 
   if (!urlObject) {
     res.status(404).send("That URL does not exist");
+    return;
   }
   if (!user) {
     res.status(403).send("You need to login before you delete a URL");
+    return;
   }
   if (urlObject.userID !== ID) {
     res.status(401).send("You do not have access to that URL");
+    return;
   }
 
   delete urlDatabase[req.params.id];
@@ -192,12 +180,15 @@ app.post("/urls/:id", (req, res) => {
 
   if (!urlObject) {
     res.status(404).send("That URL does not exist");
+    return;
   }
   if (!user) {
     res.status(403).send("You need to login before you edit a URL");
+    return;
   }
   if (urlObject.userID !== ID) {
     res.status(401).send("You do not have access to that URL");
+    return;
   }
 
   urlDatabase[req.params.id].longURL = req.body.editURL;
@@ -226,10 +217,12 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
   if (!req.body.email || !req.body.password) {
     res.status(400).send("You did not fill in a username/password");
+    return;
   }
 
-  if (!getUserByEmail(users, req.body.email)) {
+  if (getUserByEmail(req.body.email, users)) {
     res.status(400).send("That email is already taken");
+    return;
   }
 
   const randomString = generateRandomString();
