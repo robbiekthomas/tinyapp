@@ -15,9 +15,6 @@ app.use(
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
-});
 // ---- DATA -----
 
 const urlDatabase = {
@@ -47,6 +44,10 @@ const users = {
 //========================================
 
 // -------- App Requests -------
+
+app.get("/", (req, res) => {
+  res.redirect("/urls");
+});
 
 app.get("/urls", (req, res) => {
   const userID = req.session.user_id;
@@ -81,7 +82,7 @@ app.get("/urls/new", (req, res) => {
     const templateVars = {
       user,
     };
-    res.render("shortenForbidden", templateVars);
+    res.redirect("/login");
   } else {
     res.render("urls_new", templateVars);
   }
@@ -196,7 +197,7 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  req.session.user_id = null;
+  req.session = null;
   res.redirect("/login");
 });
 
@@ -265,3 +266,7 @@ app.post("/login", (req, res) => {
   res.status(403).send("Username or Password is incorrect");
 });
 ///--- LOGIN ROUTE ENDS HERE ------///
+
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}!`);
+});
